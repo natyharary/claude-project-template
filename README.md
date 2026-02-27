@@ -22,36 +22,22 @@ claude
 | `.claude/agents/` | `simplifier`, `verifier`, `researcher`, `pm`, `planner`, `coder`, `tester`, `git-handler`, `pr-reviewer` |
 | `.claude/memory/` | Persistent memory across sessions (`MEMORY.md` auto-loaded) |
 
-## Workflow tiers
+## Workflow
 
-| Task size | Approach |
-|-----------|----------|
-| Quick fix / typo | Edit directly → `/commit` |
-| Single feature | Plan → build → `/verify` → `/commit-push-pr` → `/pr-merge` |
-| Complex feature | `/pipeline "description"` → `/pr-merge` |
-
-## Feature workflow (step by step)
-
+**For most work:**
 ```
-1. Plan        shift+tab twice → enter Plan mode, describe the feature,
-                iterate until the plan is right
-
-2. Build       switch to auto-accept, Claude implements
-
-3. Verify      /verify
-                Claude runs tests and checks output — won't proceed if broken
-
-4. Commit+PR   /commit-push-pr
-                Claude writes the commit message, pushes a branch, opens a PR
-
-5. Review      /pr-review
-                Claude reviews the diff for correctness, security, test coverage
-                → if issues: /pr-address (Claude fixes, pushes to same PR)
-                → if clean: proceed
-
-6. Merge       /pr-merge
-                Re-runs review, checks CI, asks for confirmation, squash-merges,
-                deletes branch, pulls main
+/ship "describe the feature"
 ```
+That's it. Claude plans (and asks if anything is unclear), builds, reviews its own work, fixes any issues it finds, then asks for your confirmation before merging.
 
-`/pr-merge` always runs the review internally — steps 5 and 6 can be collapsed into just `/pr-merge` if you trust it.
+**Escape hatches for when you need more control:**
+
+| Command | When to use |
+|---------|-------------|
+| `/commit` | Quick fix, just need a commit message |
+| `/commit-push-pr` | You built it, just want a PR opened |
+| `/pr-review` | Review a PR without merging |
+| `/pr-address` | Fix review comments on an open PR |
+| `/pr-merge` | Merge when you're ready (runs review first) |
+| `/pipeline "description"` | Large feature, want full multi-agent orchestration |
+| `/verify` | Run tests and check output before committing |
