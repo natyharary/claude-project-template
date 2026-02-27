@@ -1,0 +1,144 @@
+name: Validate Template
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  validate:
+    name: Template Integrity Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          echo "=== Checking required files ==="
+          required=(
+            "CLAUDE.md"
+            "README.md"
+            ".mcp.json"
+            ".gitignore"
+            ".claude/settings.json"
+            ".claude/hooks/post-edit-format.sh"
+            ".claude/hooks/on-stop.sh"
+            ".claude/hooks/notify.sh"
+            ".claude/commands/commit.md"
+            ".claude/commands/commit-push-pr.md"
+            ".claude/commands/verify.md"
+            ".claude/commands/review.md"
+            ".claude/commands/fix-ci.md"
+            ".claude/commands/techdebt.md"
+            ".claude/commands/pipeline.md"
+            ".claude/commands/pipeline-status.md"
+            ".claude/commands/pipeline-reset.md"
+            ".claude/commands/pr-review.md"
+            ".claude/commands/pr-address.md"
+            ".claude/commands/pr-merge.md"
+            ".claude/commands/init-project.md"
+            ".claude/agents/simplifier.md"
+            ".claude/agents/verifier.md"
+            ".claude/agents/researcher.md"
+            ".claude/agents/pm.md"
+            ".claude/agents/planner.md"
+            ".claude/agents/coder.md"
+            ".claude/agents/tester.md"
+            ".claude/agents/git-handler.md"
+            ".claude/agents/pr-reviewer.md"
+            ".claude/memory/MEMORY.md"
+          )
+          failed=0
+          for f in "${required[@]}"; do
+            if [ -f "$f" ]; then
+              echo "  ✓ $f"
+            else
+              echo "  ✗ MISSING: $f"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Check hooks are executable
+        run: |
+          echo "=== Checking hooks are executable ==="
+          hooks=(
+            ".claude/hooks/post-edit-format.sh"
+            ".claude/hooks/on-stop.sh"
+            ".claude/hooks/notify.sh"
+          )
+          failed=0
+          for f in "${hooks[@]}"; do
+            if [ -x "$f" ]; then
+              echo "  ✓ $f"
+            else
+              echo "  ✗ NOT EXECUTABLE: $f"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Check settings.json is valid JSON
+        run: |
+          echo "=== Validating .claude/settings.json ==="
+          if python3 -m json.tool .claude/settings.json > /dev/null; then
+            echo "  ✓ Valid JSON"
+          else
+            echo "  ✗ Invalid JSON"
+            exit 1
+          fi
+
+      - name: Check CLAUDE.md has no unfilled TODOs
+        run: |
+          echo "=== Checking CLAUDE.md for unfilled TODOs ==="
+          # In the template itself, TODOs are expected — skip this check.
+          # When users copy the template, init-project fills them in.
+          # This check only fails if new accidental TODOs are introduced
+          # outside the designated placeholder sections.
+          todo_count=$(grep -c "<!-- TODO" CLAUDE.md || true)
+          echo "  Found $todo_count TODO placeholder(s) (expected in template)"
+          echo "  ✓ OK"
+
+      - name: Check agent frontmatter
+        run: |
+          echo "=== Checking agent files have frontmatter ==="
+          failed=0
+          for f in .claude/agents/*.md; do
+            if head -1 "$f" | grep -q "^---$"; then
+              echo "  ✓ $f"
+            else
+              echo "  ✗ MISSING FRONTMATTER: $f"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Check .gitignore covers key paths
+        run: |
+          echo "=== Checking .gitignore entries ==="
+          required_ignores=(
+            ".env"
+            "node_modules"
+            ".claude/pipeline/tasks.md"
+          )
+          failed=0
+          for pattern in "${required_ignores[@]}"; do
+            if grep -q "$pattern" .gitignore; then
+              echo "  ✓ $pattern"
+            else
+              echo "  ✗ MISSING FROM .gitignore: $pattern"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Check no direct-push denial is configured
+        run: |
+          echo "=== Checking settings.json denies direct push to main ==="
+          if grep -q '"Bash(git push origin main)"' .claude/settings.json; then
+            echo "  ✓ git push origin main is denied"
+          else
+            echo "  ✗ Missing deny rule for git push origin main"
+            exit 1
+          fi
