@@ -48,6 +48,8 @@ jobs:
             ".claude/agents/git-handler.md"
             ".claude/agents/pr-reviewer.md"
             ".claude/memory/MEMORY.md"
+            "docs/index.md"
+            "docs/_config.yml"
           )
           failed=0
           for f in "${required[@]}"; do
