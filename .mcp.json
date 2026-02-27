@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    // Uncomment and configure the servers you need.
+    // Run: claude mcp add --transport http <name> <url>
+    // Or add entries here directly.
+
+    // "github": {
+    //   "type": "http",
+    //   "url": "https://api.githubcopilot.com/mcp/"
+    // },
+
+    // "slack": {
+    //   "type": "http",
+    //   "url": "https://mcp.slack.com/api/mcp"
+    // },
+
+    // "postgres": {
+    //   "type": "stdio",
+    //   "command": "npx",
+    //   "args": ["-y", "@modelcontextprotocol/server-postgres"],
+    //   "env": {
+    //     "DATABASE_URL": "${DATABASE_URL}"
+    //   }
+    // }
+  }
+}

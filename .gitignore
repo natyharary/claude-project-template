@@ -1,0 +1,27 @@
+# Personal Claude Code overrides — do not commit
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Environment / secrets
+.env
+.env.*
+secrets/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies (add your own below)
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build output
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
