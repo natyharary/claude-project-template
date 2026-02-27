@@ -1,0 +1,11 @@
+title: Claude Code Project Template
+description: A starting point for new projects built with Claude Code.
+theme: minima
+baseurl: "/claude-project-template"
+url: "https://natyharary.github.io"
+
+header_pages:
+  - index.md
+  - commands.md
+  - agents.md
+  - workflow.md

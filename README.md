@@ -2,6 +2,8 @@
 
 Clone, fill in the TODOs in `CLAUDE.md`, and start building.
 
+**Documentation**: [natyharary.github.io/claude-project-template](https://natyharary.github.io/claude-project-template)
+
 ```bash
 cp -r claude_project_template my-new-project
 cd my-new-project
