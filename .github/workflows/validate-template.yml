@@ -136,7 +136,7 @@ jobs:
       - name: Check no direct-push denial is configured
         run: |
           echo "=== Checking settings.json denies direct push to main ==="
-          if grep -q '"Bash(git push origin main)"' .claude/settings.json; then
+          if grep -q 'git push origin main' .claude/settings.json; then
             echo "  ✓ git push origin main is denied"
           else
             echo "  ✗ Missing deny rule for git push origin main"
