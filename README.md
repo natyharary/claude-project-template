@@ -22,11 +22,22 @@ claude
 | `.claude/agents/` | `simplifier`, `verifier`, `researcher`, `pm`, `planner`, `coder`, `tester`, `git-handler`, `pr-reviewer` |
 | `.claude/memory/` | Persistent memory across sessions (`MEMORY.md` auto-loaded) |
 
-## Workflow tiers
+## Workflow
 
-| Task size | Approach |
-|-----------|----------|
-| Quick fix / typo | Edit directly → `/commit` |
-| Single feature | `/verify` → `/commit-push-pr` |
-| Complex feature | `/pipeline "description"` |
-| With PR review + merge | `/pipeline --with-review "description"` |
+**For most work:**
+```
+/ship "describe the feature"
+```
+That's it. Claude plans (and asks if anything is unclear), builds, reviews its own work, fixes any issues it finds, then asks for your confirmation before merging.
+
+**Escape hatches for when you need more control:**
+
+| Command | When to use |
+|---------|-------------|
+| `/commit` | Quick fix, just need a commit message |
+| `/commit-push-pr` | You built it, just want a PR opened |
+| `/pr-review` | Review a PR without merging |
+| `/pr-address` | Fix review comments on an open PR |
+| `/pr-merge` | Merge when you're ready (runs review first) |
+| `/pipeline "description"` | Large feature, want full multi-agent orchestration |
+| `/verify` | Run tests and check output before committing |

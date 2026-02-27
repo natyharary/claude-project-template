@@ -22,13 +22,21 @@ gh pr list --head $BRANCH --json number -q '.[0].number'
 
 If no PR found: stop with "No open PR found for the current branch. Pass a PR number explicitly."
 
-### 2. Fetch PR Status
+### 2. Run Claude Review
+
+Before anything else, spawn the `pr-reviewer` agent via the Task tool. Pass `PR_NUMBER`.
+
+Parse the output:
+- If `REVIEW_STATUS: changes_requested`: stop and tell the user "Claude review found blocking issues. Run `/pr-address` to fix them before merging." Print the blocking comments.
+- If `REVIEW_STATUS: approved` or `REVIEW_STATUS: commented`: continue.
+
+### 3. Fetch PR Status
 
 ```bash
 gh pr view $PR_NUMBER --json number,title,state,reviews,statusCheckRollup,mergeable,headRefName,baseRefName
 ```
 
-### 3. Safety Gate
+### 4. Safety Gate
 
 Check each condition in order. Stop with a specific error if any fail:
 
@@ -42,7 +50,7 @@ Check each condition in order. Stop with a specific error if any fail:
 
 If all conditions pass, proceed.
 
-### 4. Show Merge Confirmation
+### 5. Show Merge Confirmation
 
 Display:
 
@@ -66,11 +74,11 @@ Type "yes" or the strategy name to confirm, or "no" to cancel.
 
 Default to `squash` if the user just types "yes".
 
-### 5. STOP — Wait for Confirmation
+### 6. STOP — Wait for Confirmation
 
 **Hard stop.** Do NOT merge until the user explicitly confirms.
 
-### 6. Execute Merge
+### 7. Execute Merge
 
 ```bash
 gh pr merge $PR_NUMBER --<strategy> --delete-branch
@@ -78,14 +86,14 @@ gh pr merge $PR_NUMBER --<strategy> --delete-branch
 
 Where `<strategy>` is `squash`, `merge`, or `rebase` based on user input.
 
-### 7. Update Local Main
+### 8. Update Local Main
 
 ```bash
 git checkout <baseRefName>
 git pull origin <baseRefName>
 ```
 
-### 8. Report Result
+### 9. Report Result
 
 ```
 MERGED

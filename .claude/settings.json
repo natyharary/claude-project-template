@@ -25,6 +25,9 @@
       "Bash(gh api *)"
     ],
     "deny": [
+      "Bash(git push origin main)",
+      "Bash(git push origin master)",
+      "Bash(git push --force *)",
       "Read(.env)",
       "Read(.env.*)",
       "Read(**/secrets/**)"
