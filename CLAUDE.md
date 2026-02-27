@@ -35,6 +35,8 @@
 <!-- Add entries here whenever Claude does something wrong — prevents repetition -->
 
 ## Workflow
+- **Never push directly to main or master.** All changes go through a PR.
+- Always work on a feature branch. Use `/commit-push-pr` to open a PR, or `/pipeline` for larger work.
 - Use Plan mode (shift+tab twice) for non-trivial tasks before writing code
 - After planning, switch to auto-accept edits for execution
 - Use subagents for parallel workstreams (see `.claude/agents/`)
