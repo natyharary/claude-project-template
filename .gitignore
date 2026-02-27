@@ -25,3 +25,7 @@ build/
 
 # Logs
 *.log
+
+# Pipeline (transient state — archive is kept)
+.claude/pipeline/tasks.md
+.claude/worktrees/

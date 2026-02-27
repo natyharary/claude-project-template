@@ -4,7 +4,7 @@
 
 # --- System notification (macOS) ---
 if command -v osascript &>/dev/null; then
-  osascript -e 'display notification "Claude has finished. Check output." with title "Claude Code"' 2>/dev/null
+  osascript -e 'display notification "Done!" with title "Claude Code"' 2>/dev/null
 fi
 
 # --- Linux notification ---

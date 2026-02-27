@@ -17,6 +17,14 @@ See [patterns.md](patterns.md):
 See [debugging.md](debugging.md):
 <!-- Summarize gotchas here as they're discovered -->
 
+## Multi-Agent Pipeline
+- 5 agents: pm (opus), planner (opus), coder (sonnet), tester (sonnet), git-handler (sonnet)
+- Shared state: `.claude/pipeline/tasks.md` (gitignored)
+- Only Planner has Task tool; only Git Handler runs git mutations
+- Commands: `/pipeline`, `/pipeline-status`, `/pipeline-reset`
+- Worktrees: `.claude/worktrees/` (gitignored)
+- Archive: `.claude/pipeline/archive/` (kept in git)
+
 ## User Preferences
 <!-- Things the user has explicitly asked to always/never do -->
 - CLI-first: do not add web server or API unless user asks
