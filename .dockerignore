@@ -46,7 +46,10 @@ coverage
 .claude/pipeline/tasks.md
 .claude/worktrees
 
-# Docs / dev-only files (not needed in image)
+# Dev-only files (not needed in image).
+# Drop entries below if your real Dockerfile uses `COPY . .` AND needs any of
+# these — e.g. scripts in docs/, Makefile as in-container task runner, or
+# README.md bundled for `--help`.
 docs
 docs/_site
 Makefile

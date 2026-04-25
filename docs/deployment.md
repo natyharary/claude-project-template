@@ -88,7 +88,7 @@ The third option is heavier but gives you full control over nginx (rate limiting
 
 ## Common issues
 
-- **`HETZNER_IP not set` or similar**: `.env` not loaded. Check the file exists and `make env` shows your vars.
+- **`HETZNER_IP not set` or similar**: `.env` not loaded. Check the file exists and `make config` (or `kamal config`) shows your vars resolved.
 - **Registry push denied**: `docker login` from the same shell, or check `KAMAL_REGISTRY_PASSWORD` is a valid token (not your account password for Docker Hub).
 - **Cert never issues**: see IPv6 section above. Also verify port 80 is open in the firewall and DNS has propagated (`dig +short DOMAIN`).
 - **Container restarts in a loop**: `make logs` to see why. Often a missing env var or wrong `app_port`.
