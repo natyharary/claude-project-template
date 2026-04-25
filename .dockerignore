@@ -13,6 +13,16 @@
 !.env.example
 CLAUDE.local.md
 .claude/settings.local.json
+.kamal/secrets
+
+# Credentials (defense-in-depth)
+*.pem
+*.key
+id_rsa*
+.ssh
+.aws
+.npmrc
+.netrc
 
 # Build output
 dist
@@ -36,5 +46,9 @@ coverage
 .claude/pipeline/tasks.md
 .claude/worktrees
 
-# Docs site
+# Docs / dev-only files (not needed in image)
+docs
 docs/_site
+Makefile
+README.md
+CLAUDE.md

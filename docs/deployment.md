@@ -92,7 +92,13 @@ The third option is heavier but gives you full control over nginx (rate limiting
 - **Registry push denied**: `docker login` from the same shell, or check `KAMAL_REGISTRY_PASSWORD` is a valid token (not your account password for Docker Hub).
 - **Cert never issues**: see IPv6 section above. Also verify port 80 is open in the firewall and DNS has propagated (`dig +short DOMAIN`).
 - **Container restarts in a loop**: `make logs` to see why. Often a missing env var or wrong `app_port`.
-- **Apple Silicon build is slow**: it's cross-compiling to amd64. Consider a remote builder: `kamal build remote --host BUILDER_IP`.
+- **Apple Silicon build is slow**: it's cross-compiling to amd64. Configure a remote builder declaratively in `config/deploy.yml`:
+  ```yaml
+  builder:
+    remote: ssh://root@BUILDER_IP
+    arch: amd64
+  ```
+  Kamal then runs `docker buildx` on the remote host (native amd64) instead of emulating locally.
 
 ## Reference
 

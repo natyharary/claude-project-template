@@ -1,4 +1,4 @@
-.PHONY: help setup deploy redeploy rollback logs console ps env
+.PHONY: help setup deploy redeploy rollback logs console ps config
 
 # Load .env if present so kamal sees DEPLOY_HOST, DOMAIN, registry creds, etc.
 # Create one at project root (gitignored) — see docs/deployment.md.
@@ -15,7 +15,7 @@ help:
 	@echo "  logs        tail app logs (Ctrl+C to stop)"
 	@echo "  console     open shell in running container"
 	@echo "  ps          list containers on the server"
-	@echo "  env         print env vars Kamal sees"
+	@echo "  config      print combined Kamal config (resolved env + secrets)"
 	@echo ""
 	@echo "Required env vars (in .env): DEPLOY_HOST, DOMAIN, IMAGE,"
 	@echo "  KAMAL_REGISTRY_USERNAME, KAMAL_REGISTRY_PASSWORD, plus app secrets."
@@ -41,5 +41,5 @@ console:
 ps:
 	kamal app details
 
-env:
-	kamal envify
+config:
+	kamal config
