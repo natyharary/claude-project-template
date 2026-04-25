@@ -89,3 +89,20 @@ This project starts as a CLI tool. To graduate to the next tier, the user must e
 1. **CLI** (default): stdin/stdout, run with `node index.js` or equivalent
 2. **API server**: add only when user asks — minimal HTTP layer over existing logic
 3. **Full web app**: add only when user asks — frontend + backend
+
+## Deployment (Kamal 2)
+Container deploy infra ships with the template. Default proxy is `kamal-proxy` (built-in, auto-TLS via Let's Encrypt).
+
+Files:
+- `Dockerfile`, `.dockerignore` — image build
+- `config/deploy.yml` — Kamal config (servers, registry, proxy, env)
+- `.kamal/secrets` — secret resolver stub
+- `Makefile` — `setup`, `deploy`, `redeploy`, `rollback`, `logs`, `console`
+- `docs/deployment.md` — full walkthrough + troubleshooting (incl. IPv6/HTTP-01 caveat)
+
+Workflow:
+1. Fill in TODOs in `config/deploy.yml` and `Dockerfile`.
+2. Create `.env` (gitignored) with `DEPLOY_HOST`, `DOMAIN`, `IMAGE`, registry creds, app secrets.
+3. `make setup` once, then `make deploy` for updates.
+
+If kamal-proxy TLS issuance fails, check for AAAA records — Let's Encrypt HTTP-01 may try IPv6 first. Drop AAAA or open port 80 on v6. As a last resort, swap to a custom nginx+certbot accessory stack (see `docs/deployment.md` for reference).

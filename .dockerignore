@@ -1,0 +1,40 @@
+.git
+.gitignore
+.github
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Build output
+dist
+build
+out
+target
+*.egg-info
+__pycache__
+*.pyc
+
+# Deps
+node_modules
+vendor
+
+# Test / coverage
+coverage
+.nyc_output
+.pytest_cache
+
+# Claude harness state
+.claude/pipeline/tasks.md
+.claude/worktrees
+
+# Docs site
+docs/_site

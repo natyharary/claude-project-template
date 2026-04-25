@@ -23,6 +23,7 @@ claude
 | `.claude/commands/` | `/commit`, `/commit-push-pr`, `/verify`, `/review`, `/fix-ci`, `/techdebt`, `/pipeline`, `/pr-review`, `/pr-address`, `/pr-merge` |
 | `.claude/agents/` | `simplifier`, `verifier`, `researcher`, `pm`, `planner`, `coder`, `tester`, `git-handler`, `pr-reviewer` |
 | `.claude/memory/` | Persistent memory across sessions (`MEMORY.md` auto-loaded) |
+| `Dockerfile`, `config/deploy.yml`, `Makefile` | Kamal 2 deploy infra — see [docs/deployment.md](docs/deployment.md) |
 
 ## Workflow
 
@@ -43,3 +44,7 @@ That's it. Claude plans (and asks if anything is unclear), builds, reviews its o
 | `/pr-merge` | Merge when you're ready (runs review first) |
 | `/pipeline "description"` | Large feature, want full multi-agent orchestration |
 | `/verify` | Run tests and check output before committing |
+
+## Deployment
+
+Kamal 2 infra (Dockerfile, `config/deploy.yml`, `Makefile`) ships in the template. Built-in `kamal-proxy` for auto-TLS. See [docs/deployment.md](docs/deployment.md) for setup, the IPv6/HTTP-01 gotcha, and the escape hatch to nginx+certbot.
