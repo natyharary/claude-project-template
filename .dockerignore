@@ -1,0 +1,57 @@
+.git
+.gitignore
+.github
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+CLAUDE.local.md
+.claude/settings.local.json
+.kamal/secrets
+
+# Credentials (defense-in-depth)
+*.pem
+*.key
+id_rsa*
+.ssh
+.aws
+.npmrc
+.netrc
+
+# Build output
+dist
+build
+out
+target
+*.egg-info
+__pycache__
+*.pyc
+
+# Deps
+node_modules
+vendor
+
+# Test / coverage
+coverage
+.nyc_output
+.pytest_cache
+
+# Claude harness state
+.claude/pipeline/tasks.md
+.claude/worktrees
+
+# Dev-only files (not needed in image).
+# Drop entries below if your real Dockerfile uses `COPY . .` AND needs any of
+# these — e.g. scripts in docs/, Makefile as in-container task runner, or
+# README.md bundled for `--help`.
+docs
+docs/_site
+Makefile
+README.md
+CLAUDE.md

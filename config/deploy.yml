@@ -1,0 +1,80 @@
+# Kamal 2 deploy config. Run `kamal setup` first time, then `kamal deploy`
+# for updates. See docs/deployment.md for full walkthrough.
+#
+# Values marked TODO must be filled in before first deploy.
+# `<%= ENV.fetch('FOO') %>` reads FOO from the shell that invoked Kamal —
+# the Makefile sources `.env` and exports vars before calling kamal.
+
+# TODO: service name (lowercase, hyphens). Used as container name prefix.
+service: my-app
+
+# TODO: registry image path. Examples:
+#   docker.io:  username/my-app
+#   ghcr.io:    ghcr.io/username/my-app
+image: <%= ENV.fetch('IMAGE', 'username/my-app') %>
+
+servers:
+  web:
+    hosts:
+      # TODO: server IP or hostname. Prefer IPv4 — kamal-proxy's Let's Encrypt
+      # HTTP-01 challenge can fail on IPv6-first DNS (see docs/deployment.md).
+      - <%= ENV.fetch('DEPLOY_HOST') %>
+
+# kamal-proxy: built-in reverse proxy with auto-TLS via Let's Encrypt.
+# Requires:
+#   - DNS A record (IPv4) pointing to DEPLOY_HOST — AAAA-only or AAAA-first
+#     records can break HTTP-01 challenge on dual-stack hosts.
+#   - Port 80 open (HTTP-01 challenge) and 443 open (HTTPS).
+#   - DOMAIN resolvable to the server before first deploy.
+proxy:
+  ssl: true
+  host: <%= ENV.fetch('DOMAIN') %>
+  # TODO: app's listening port inside the container.
+  app_port: 3000
+  # Healthcheck path the proxy hits before routing traffic to a new container.
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 3
+
+registry:
+  # Default is docker.io. Uncomment for ghcr.io or a private registry.
+  # server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  # `arch: amd64` if your dev machine is arm64 (Apple Silicon) but your
+  # server is x86_64. Drop this line if both match.
+  arch: amd64
+  dockerfile: Dockerfile
+  context: .
+  # Build args baked into the image at build time. Use for public values
+  # (API URLs, feature flags). For secrets, use `env.secret` below.
+  # args:
+  #   PUBLIC_API_URL: <%= ENV.fetch('PUBLIC_API_URL') %>
+
+env:
+  clear:
+    # TODO: non-secret env vars. Visible in `kamal env`.
+    NODE_ENV: production
+    PORT: "3000"
+  secret:
+    # TODO: secret env-var names. Values resolved from the shell environment
+    # via .kamal/secrets at deploy time. Never commit real values.
+    # - DATABASE_URL
+    # - SESSION_SECRET
+
+# Add accessories (Postgres, Redis, etc.) here if needed.
+# accessories:
+#   db:
+#     image: postgres:16
+#     host: <%= ENV.fetch('DEPLOY_HOST') %>
+#     port: 5432
+#     env:
+#       secret:
+#         - POSTGRES_PASSWORD
+#     volumes:
+#       - /var/lib/my-app/postgres:/var/lib/postgresql/data
