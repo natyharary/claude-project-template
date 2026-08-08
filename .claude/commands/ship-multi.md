@@ -56,11 +56,14 @@ Once approved, loop over `F1..FN` in order. For each feature, run the following 
 
 ### 2a. Fresh base
 ```bash
+git status --porcelain
 git checkout main
 git pull origin main
 git checkout -b feature/<slug-from-Fi>
 ```
 Branching off a freshly-pulled `main` means each feature builds on the previous feature's merge.
+
+`git status --porcelain` must be empty before branching. If it isn't, a previous feature left uncommitted or untracked changes on `main` — **stop the whole loop and report** (this is the "anything fails outside the defined skip cases" rule); do not carry those changes into `Fi`'s branch. This check is what prevents one feature's diff from silently riding along inside the next feature's PR.
 
 ### 2b. Build
 Implement `Fi`'s plan (coder agent or directly, depending on scope). Run the test command from CLAUDE.md if configured; fix and re-run until green.
@@ -72,6 +75,9 @@ Stage the explicit changed files (never `git add -A`), commit with a conventiona
 ```bash
 gh pr create --title "<title>" --body "<summary>"
 ```
+Before staging, diff the changed files against what `Fi`'s plan actually touches. Stage only files that plan produced. If unexpected files show up (leftovers from a prior feature, stale build artifacts), that is the same "unexpected state" case as 2a — stop and report rather than folding them into this PR.
+
+The PR title and body must describe `Fi` specifically — never a generic label like the command name itself. A PR whose diff doesn't match its title is worse than no PR: it hides what actually shipped from anyone reading history later.
 
 ### 2d. Self-review
 Spawn the `pr-reviewer` agent against the new PR.
@@ -118,7 +124,7 @@ Local `main` ends up pulled and up to date. For any SKIPPED feature, its PR is l
 ## Rules
 
 - Never push directly to main.
-- Each feature gets exactly one PR of its own.
+- Each feature gets exactly one PR of its own, titled and described for that feature specifically — never inherit another feature's title, and never let one feature's diff ride along inside another's PR. `git status --porcelain` must be clean before branching for `Fi` (2a); stage only files `Fi`'s plan produced (2c).
 - Never skip the self-review step for any feature.
 - Auto-merge without a per-feature prompt is allowed here ONLY because the whole batch was approved once, up front, in Phase 1.
 - A skipped feature (build failure, blocked review, or failing CI) never blocks later features — always continue the loop.
